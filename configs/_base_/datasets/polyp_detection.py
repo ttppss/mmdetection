@@ -33,7 +33,7 @@ data = dict(
     workers_per_gpu=2,
     train=dict(
         type=dataset_type,
-        ann_file=data_root + 'annotations/train_anno.json',
+        ann_file=data_root + 'annotation/train_anno.json',
         # training data path is /data1/zinan_xiong/datasets/dataset/large_dataset
         img_prefix=data_root + 'large_dataset/',
         pipeline=train_pipeline),
@@ -45,7 +45,7 @@ data = dict(
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'annotations/test_anno.json',
+        ann_file=data_root + 'annotation/test_anno.json',
         img_prefix=data_root + 'CVC-ClinicDB/',
         pipeline=test_pipeline))
 evaluation = dict(interval=1, metric='bbox')
