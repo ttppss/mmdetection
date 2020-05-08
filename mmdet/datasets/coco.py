@@ -32,7 +32,7 @@ class CocoDataset(CustomDataset):
     #            'mouse', 'remote', 'keyboard', 'cell phone', 'microwave',
     #            'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock',
     #            'vase', 'scissors', 'teddy bear', 'hair drier', 'toothbrush')
-    CLASSES = ('instrument', 'polyp')
+    CLASSES = ('polyp')
 
     def load_annotations(self, ann_file):
         self.coco = COCO(ann_file)
