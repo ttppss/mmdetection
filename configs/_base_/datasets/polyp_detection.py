@@ -46,6 +46,7 @@ data = dict(
     test=dict(
         type=dataset_type,
         ann_file=data_root + 'annotation/test_anno.json',
-        img_prefix=data_root + 'CVC-ClinicDB/',
+        # img_prefix is different, fixed.
+        img_prefix=data_root,
         pipeline=test_pipeline))
 evaluation = dict(interval=1, metric='bbox')
