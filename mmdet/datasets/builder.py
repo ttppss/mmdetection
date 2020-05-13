@@ -56,6 +56,10 @@ def build_dataset(cfg, default_args=None):
     elif isinstance(cfg.get('ann_file'), (list, tuple)):
         dataset = _concat_dataset(cfg, default_args)
     else:
+        # annotations for build_from_cfg
+        # cfg (dict) – Config dict. It should at least contain the key “type”.
+        # registry (Registry) – The registry to search the type from.
+        # default_args (dict, optional) – Default initialization arguments.
         dataset = build_from_cfg(cfg, DATASETS, default_args)
 
     return dataset
