@@ -23,7 +23,7 @@ def single_gpu_test(model,
     for i, data in enumerate(data_loader):
         with torch.no_grad():
             result = model(return_loss=False, rescale=True, **data)
-            # print('result in single_gpu_test: ', result)
+            print('result in single_gpu_test: ', result)
         results.append(result)
 
         if show or out_dir:
