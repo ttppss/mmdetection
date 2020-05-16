@@ -22,10 +22,13 @@ def single_gpu_test(model,
     prog_bar = mmcv.ProgressBar(len(dataset))
     for i, data in enumerate(data_loader):
         with torch.no_grad():
+            # for one picture, it returns several bbox, each bbox consists of one bbox and one segmentation,
+            # in our case, segmentation is a blank list.
             result = model(return_loss=False, rescale=True, **data)
-            print('\n', 'result in single_gpu_test: ', result)
+            # print('\n', 'result in single_gpu_test: ', result)
+        # the shape of results is the length of the test set.
         results.append(result)
-        print('final result in single_gpu_test: ', results, '\n', 'final result shape: ', len(results))
+        # print('final result in single_gpu_test: ', results, '\n', 'final result shape: ', len(results))
 
         if show or out_dir:
             img_tensor = data['img'][0]
