@@ -62,8 +62,8 @@ def polyp_evaluate(results):
                 new_results.append(new_result)
                 new_scores.append(new_score)
             eval = Metric(visualize=False, mode='center')
-            for i in range(len(gt_lists)):
-                eval.eval_add_result(gt_lists, new_results)
+            # for i in range(len(gt_lists)):
+            eval.eval_add_result(gt_lists, new_results)
             precision, recall, pred_bbox_count = eval.get_result()
             F1 = 2 * (precision * recall) / max((precision + recall), 1e-5)
             F2 = 5 * (precision * recall) / max((4 * precision + recall), 1e-5)
