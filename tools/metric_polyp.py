@@ -60,34 +60,35 @@ class Metric(object):
             print("gt_box: ", gt_box, "\n")
 
             not_matched = []
-            for j in pred_points:
-                self.pred_bbox_count += 1
-                print("pred_boxes: ", j, "\n")
-                if self.mode == 'center':
-                    ctx = j[0] + (j[2] - j[0]) * 0.5
-                    cty = j[1] + (j[3] - j[1]) * 0.5
-                    bbox_matched=gt[0] < ctx < gt[2] and gt[1] < cty < gt[3]
+            for pred_point in pred_points:
+                for j in pred_point:
+                    self.pred_bbox_count += 1
+                    print("pred_boxes: ", j, "\n")
+                    if self.mode == 'center':
+                        ctx = j[0] + (j[2] - j[0]) * 0.5
+                        cty = j[1] + (j[3] - j[1]) * 0.5
+                        bbox_matched=gt[0] < ctx < gt[2] and gt[1] < cty < gt[3]
 
-                elif self.mode =='iou':
-                    query_area =(j[2] - j[0])*(j[3] - j[1])
-                    gt_area = (gt[2] - gt[0])*(gt[3] - gt[1])
-                    iw = (min(j[2],gt[2])-max(j[0],gt[0]))
-                    ih =(min(j[3],gt[3])-max(j[1],gt[1]))
-                    iw =max(0, iw)
-                    ih = max(0, ih)
-                    ua = query_area+gt_area -(iw*ih)
-                    overlaps = (iw*ih)/float(ua)
-                    bbox_matched= overlaps>self.iou_thresh
+                    elif self.mode =='iou':
+                        query_area =(j[2] - j[0])*(j[3] - j[1])
+                        gt_area = (gt[2] - gt[0])*(gt[3] - gt[1])
+                        iw = (min(j[2],gt[2])-max(j[0],gt[0]))
+                        ih =(min(j[3],gt[3])-max(j[1],gt[1]))
+                        iw =max(0, iw)
+                        ih = max(0, ih)
+                        ua = query_area+gt_area -(iw*ih)
+                        overlaps = (iw*ih)/float(ua)
+                        bbox_matched= overlaps>self.iou_thresh
 
-                if bbox_matched:
-                    TP_Count += 1
-                    # TODO seems not that right here.
-                    # if not hasTP, only pick one TP from the list, discard others since they won't intercept:
-                    if not hasTP:
-                        self.TPs.append(j)
-                        hasTP = True
-                else:
-                    not_matched.append(j)
+                    if bbox_matched:
+                        TP_Count += 1
+                        # TODO seems not that right here.
+                        # if not hasTP, only pick one TP from the list, discard others since they won't intercept:
+                        if not hasTP:
+                            self.TPs.append(j)
+                            hasTP = True
+                    else:
+                        not_matched.append(j)
             pred_points = not_matched
             # if TP_Count > 0:
             #     hasTP = True
