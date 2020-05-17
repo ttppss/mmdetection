@@ -57,7 +57,7 @@ def polyp_evaluate(results):
                 for bbox in result[0]:
                     # print('\n', 'bbox: ', bbox)
                     if bbox[4] > thresh:
-                        new_result.append(bbox2box(bbox[:4]).tolist())
+                        new_result.append(bbox2box(bbox[:4]))
                         new_score.append(bbox[4])
                 new_results.append(new_result)
                 new_scores.append(new_score)

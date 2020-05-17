@@ -62,6 +62,7 @@ class Metric(object):
             not_matched = []
             for pred_point in pred_points:
                 for j in pred_point:
+                    j = [j[0], j[1], j[2], j[3]]
                     self.pred_bbox_count += 1
                     print("pred_boxes type: {}".format([type(i) for i in j], "\n"))
                     if self.mode == 'center':
