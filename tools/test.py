@@ -49,7 +49,9 @@ def polyp_evaluate(results):
         for thresh in np.linspace(0.2, 0.95, 1):
             new_results = list()
             new_scores = list()
+            print('\n', 'results: ', results)
             for result in results:
+                print('\n', 'result: ', result)
                 new_result = list()
                 new_score = list()
                 for bbox in result:
