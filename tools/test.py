@@ -20,12 +20,12 @@ from mmdet.models import build_detector
 
 
 # customized evaluation for polyp detection
-def bbox2box(self, bbox):
+def bbox2box(bbox):
     box = [bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]]
     return box
 
 
-def get_gt_lists(self, json_file, category=1):
+def get_gt_lists(json_file, category=1):
     json_data = json.load(open(json_file))
     gt_lists = []
     image_ids = []
