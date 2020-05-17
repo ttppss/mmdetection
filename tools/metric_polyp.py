@@ -55,15 +55,15 @@ class Metric(object):
         self.total_gt += len(ground_truth)
         for index_gt_box, gt_box in enumerate(ground_truth):
             hasTP = False
-            gt = gt_box
+            gt = gt_box[0]
             TP_Count = 0
-            print("gt_box 0: ", gt[0], "\n")
+            # print("gt_box 0: ", gt[0], "\n")
 
             not_matched = []
             for pred_point in pred_points:
                 for j in pred_point:
                     self.pred_bbox_count += 1
-                    print("pred_boxes: ", j, "\n")
+                    print("pred_boxes type: {}".format([type(i) for i in j], "\n"))
                     if self.mode == 'center':
                         ctx = j[0] + (j[2] - j[0]) * 0.5
                         cty = j[1] + (j[3] - j[1]) * 0.5
