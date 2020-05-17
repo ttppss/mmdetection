@@ -45,11 +45,10 @@ def get_gt_lists(json_file, category=1):
 
 def polyp_evaluate(results):
     with torch.no_grad():
-        gt_lists, image_ids, _ = get_gt_lists('/data1/zinan_xiong/datasets/dataset/annotation/test_anno.json')
         for thresh in np.linspace(0.2, 0.95, 1):
+            gt_lists, image_ids, _ = get_gt_lists('/data1/zinan_xiong/datasets/dataset/annotation/test_anno.json')
             new_results = list()
             new_scores = list()
-            eval = Metric(visualize=False, mode='center')
             # print('\n', 'results: ', results)
             for result in results:
                 # print('\n', 'result: ', result)
@@ -62,6 +61,8 @@ def polyp_evaluate(results):
                         new_score.append(bbox[4])
                 new_results.append(new_result)
                 new_scores.append(new_score)
+
+            eval = Metric(visualize=False, mode='center')
 
             for i in range(len(gt_lists)):
                 eval.eval_add_result(gt_lists[i], new_results[i])

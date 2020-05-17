@@ -57,7 +57,7 @@ class Metric(object):
             hasTP = False
             gt = gt_box
             TP_Count = 0
-            print("gt_box 0: ", gt[0], "\n")
+            # print("gt_box 0: ", gt[0], "\n")
 
             not_matched = []
             for j in pred_points:
