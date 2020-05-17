@@ -55,9 +55,9 @@ class Metric(object):
         self.total_gt += len(ground_truth)
         for index_gt_box, gt_box in enumerate(ground_truth):
             hasTP = False
-            gt = gt_box[0]
+            gt = gt_box
             TP_Count = 0
-            print("gt_box: ", gt_box, "\n")
+            print("gt_box 0: ", gt[0], "\n")
 
             not_matched = []
             for pred_point in pred_points:
