@@ -10,6 +10,8 @@ from tools.fuse_conv_bn import fuse_module
 
 import json
 import numpy as np
+from tools.metric_polyp import Metric
+import time
 
 from mmdet.apis import multi_gpu_test, single_gpu_test
 from mmdet.core import wrap_fp16_model
@@ -43,6 +45,7 @@ def get_gt_lists(self, json_file, category=1):
 
 def polyp_evaluate(results):
     with torch.no_grad():
+        gt_lists, image_ids, _ = get_gt_lists('/data1/zinan_xiong/datasets/dataset/annotation/test_anno.json')
         for thresh in np.linspace(0.2, 0.95, 1):
             new_results = list()
             new_scores = list()
@@ -55,7 +58,18 @@ def polyp_evaluate(results):
                         new_score.append(bbox[0][4])
                 new_results.append(new_result)
                 new_scores.append(new_score)
-
+            eval = Metric(visualize=False, mode='center')
+            for i in range(len(gt_lists)):
+                eval.eval_add_result(gt_lists, new_results)
+            precision, recall, pred_bbox_count = eval.get_result()
+            F1 = 2 * (precision * recall) / max((precision + recall), 1e-5)
+            F2 = 5 * (precision * recall) / max((4 * precision + recall), 1e-5)
+            print("detect time: ", time.time() - st)
+            print("Threshold: {:5f}, Prec: {:5f}, Rec: {:5f}, F1: {:5f}, F2: {:5f}, pred_bbox_count: {}".format(thresh,
+                                                                                                                precision,
+                                                                                                                recall,
+                                                                                                                F1, F2,
+                                                                                                                pred_bbox_count))
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -150,8 +164,8 @@ def main():
         shuffle=False)
 
     # test data_loader
-    for i, item in enumerate(data_loader):
-        print(item)
+    # for i, item in enumerate(data_loader):
+    #     print(item)
 
     # build the model and load checkpoint
     model = build_detector(cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
@@ -189,8 +203,10 @@ def main():
         if args.format_only:
             dataset.format_results(outputs, **kwargs)
         if args.eval:
-            dataset.evaluate(outputs, args.eval, **kwargs)
+            # dataset.evaluate(outputs, args.eval, **kwargs)
+            polyp_evaluate(outputs)
 
 
 if __name__ == '__main__':
+    st = time.time()
     main()
