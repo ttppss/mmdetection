@@ -62,7 +62,7 @@ class Metric(object):
             not_matched = []
             for j in pred_points:
                 self.pred_bbox_count += 1
-                #print("pred_boxes: ", j, "\n")
+                print("pred_boxes: ", j, "\n")
                 if self.mode == 'center':
                     ctx = j[0] + (j[2] - j[0]) * 0.5
                     cty = j[1] + (j[3] - j[1]) * 0.5
