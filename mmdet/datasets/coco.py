@@ -1,4 +1,5 @@
 import itertools
+import json
 import logging
 import os.path as osp
 import tempfile
@@ -10,6 +11,8 @@ from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
 from terminaltables import AsciiTable
 
+import torch
+
 from mmdet.core import eval_recalls
 from .builder import DATASETS
 from .custom import CustomDataset
@@ -17,7 +20,6 @@ from .custom import CustomDataset
 
 @DATASETS.register_module()
 class CocoDataset(CustomDataset):
-
     # CLASSES = ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
     #            'train', 'truck', 'boat', 'traffic light', 'fire hydrant',
     #            'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog',
@@ -301,7 +303,7 @@ class CocoDataset(CustomDataset):
         assert isinstance(results, list), 'results must be a list'
         assert len(results) == len(self), (
             'The length of results is not equal to the dataset len: {} != {}'.
-            format(len(results), len(self)))
+                format(len(results), len(self)))
 
         if jsonfile_prefix is None:
             tmp_dir = tempfile.TemporaryDirectory()

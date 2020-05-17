@@ -8,10 +8,53 @@ from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
 from mmcv.runner import get_dist_info, init_dist, load_checkpoint
 from tools.fuse_conv_bn import fuse_module
 
+import json
+import numpy as np
+
 from mmdet.apis import multi_gpu_test, single_gpu_test
 from mmdet.core import wrap_fp16_model
 from mmdet.datasets import build_dataloader, build_dataset
 from mmdet.models import build_detector
+
+
+# customized evaluation for polyp detection
+def bbox2box(self, bbox):
+    box = [bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]]
+    return box
+
+
+def get_gt_lists(self, json_file, category=1):
+    json_data = json.load(open(json_file))
+    gt_lists = []
+    image_ids = []
+    dir_list = []
+
+    for image in json_data["images"]:
+        image_ids.append(image["id"])
+        gt_list = []
+        for annotation in json_data["annotations"]:
+            if image["id"] == annotation["image_id"] and annotation["category_id"] == category:
+                gt_list.append(bbox2box(annotation["bbox"]))
+        dir_list.append(image["file_name"])
+        gt_lists.append(gt_list)
+
+    return gt_lists, image_ids, dir_list
+
+
+def polyp_evaluate(results):
+    with torch.no_grad():
+        for thresh in np.linspace(0.2, 0.95, 1):
+            new_results = list()
+            new_scores = list()
+            for result in results:
+                new_result = list()
+                new_score = list()
+                for bbox in result:
+                    if bbox[0][4] > thresh:
+                        new_result.append(bbox[0][:4])
+                        new_score.append(bbox[0][4])
+                new_results.append(new_result)
+                new_scores.append(new_score)
 
 
 def parse_args():
@@ -105,6 +148,10 @@ def main():
         workers_per_gpu=cfg.data.workers_per_gpu,
         dist=distributed,
         shuffle=False)
+
+    # test data_loader
+    for i, item in enumerate(data_loader):
+        print(item)
 
     # build the model and load checkpoint
     model = build_detector(cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
