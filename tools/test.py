@@ -49,16 +49,16 @@ def polyp_evaluate(results):
         for thresh in np.linspace(0.2, 0.95, 1):
             new_results = list()
             new_scores = list()
-            print('\n', 'results: ', results)
+            # print('\n', 'results: ', results)
             for result in results:
-                print('\n', 'result: ', result)
+                # print('\n', 'result: ', result)
                 new_result = list()
                 new_score = list()
-                for bbox in result:
-                    print('\n', 'bbox: ', bbox)
-                    if bbox[0][4] > thresh:
-                        new_result.append(bbox[0][:4])
-                        new_score.append(bbox[0][4])
+                for bbox in result[0]:
+                    # print('\n', 'bbox: ', bbox)
+                    if bbox[4] > thresh:
+                        new_result.append(bbox[:4])
+                        new_score.append(bbox[4])
                 new_results.append(new_result)
                 new_scores.append(new_score)
             eval = Metric(visualize=False, mode='center')
