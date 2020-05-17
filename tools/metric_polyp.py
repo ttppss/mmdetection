@@ -55,42 +55,41 @@ class Metric(object):
         self.total_gt += len(ground_truth)
         for index_gt_box, gt_box in enumerate(ground_truth):
             hasTP = False
-            gt = gt_box[0]
+            gt = gt_box
             TP_Count = 0
-            # print("gt_box 0: ", gt[0], "\n")
+            print("gt_box 0: ", gt[0], "\n")
 
             not_matched = []
-            for pred_point in pred_points:
-                for j in pred_point:
-                    # j = [j[0], j[1], j[2], j[3]]
-                    self.pred_bbox_count += 1
-                    # print("pred_boxes type: {}".format([type(i) for i in j], "\n"))
-                    # print("j0, j1, j2, j3", j[0], j[1], j[2], j[3])
-                    if self.mode == 'center':
-                        ctx = j[0] + (j[2] - j[0]) * 0.5
-                        cty = j[1] + (j[3] - j[1]) * 0.5
-                        bbox_matched = gt[0] < ctx < gt[2] and gt[1] < cty < gt[3]
+            for j in pred_points:
+                # j = [j[0], j[1], j[2], j[3]]
+                self.pred_bbox_count += 1
+                # print("pred_boxes type: {}".format([type(i) for i in j], "\n"))
+                # print("j0, j1, j2, j3", j[0], j[1], j[2], j[3])
+                if self.mode == 'center':
+                    ctx = j[0] + (j[2] - j[0]) * 0.5
+                    cty = j[1] + (j[3] - j[1]) * 0.5
+                    bbox_matched = gt[0] < ctx < gt[2] and gt[1] < cty < gt[3]
 
-                    elif self.mode == 'iou':
-                        query_area = (j[2] - j[0]) * (j[3] - j[1])
-                        gt_area = (gt[2] - gt[0]) * (gt[3] - gt[1])
-                        iw = (min(j[2], gt[2]) - max(j[0], gt[0]))
-                        ih = (min(j[3], gt[3]) - max(j[1], gt[1]))
-                        iw = max(0, iw)
-                        ih = max(0, ih)
-                        ua = query_area + gt_area - (iw * ih)
-                        overlaps = (iw * ih) / float(ua)
-                        bbox_matched = overlaps > self.iou_thresh
+                elif self.mode == 'iou':
+                    query_area = (j[2] - j[0]) * (j[3] - j[1])
+                    gt_area = (gt[2] - gt[0]) * (gt[3] - gt[1])
+                    iw = (min(j[2], gt[2]) - max(j[0], gt[0]))
+                    ih = (min(j[3], gt[3]) - max(j[1], gt[1]))
+                    iw = max(0, iw)
+                    ih = max(0, ih)
+                    ua = query_area + gt_area - (iw * ih)
+                    overlaps = (iw * ih) / float(ua)
+                    bbox_matched = overlaps > self.iou_thresh
 
-                    if bbox_matched:
-                        TP_Count += 1
-                        # TODO seems not that right here.
-                        # if not hasTP, only pick one TP from the list, discard others since they won't intercept:
-                        if not hasTP:
-                            self.TPs.append(j)
-                            hasTP = True
-                    else:
-                        not_matched.append(j)
+                if bbox_matched:
+                    TP_Count += 1
+                    # TODO seems not that right here.
+                    # if not hasTP, only pick one TP from the list, discard others since they won't intercept:
+                    if not hasTP:
+                        self.TPs.append(j)
+                        hasTP = True
+                else:
+                    not_matched.append(j)
             pred_points = not_matched
             # if TP_Count > 0:
             #     hasTP = True
