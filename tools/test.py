@@ -45,6 +45,7 @@ def get_gt_lists(json_file, category=1):
 
 def polyp_evaluate(results):
     with torch.no_grad():
+        results = results
         for thresh in np.linspace(0.2, 0.95, 1):
             gt_lists, image_ids, _ = get_gt_lists('/data1/zinan_xiong/datasets/dataset/annotation/test_anno.json')
             new_results = list()
