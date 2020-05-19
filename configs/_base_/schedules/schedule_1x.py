@@ -9,4 +9,4 @@ lr_config = dict(
     warmup_ratio=0.001,
     step=[8, 11])
 # change the epoch from 12 to 6
-total_epochs = 6
+total_epochs = 12
