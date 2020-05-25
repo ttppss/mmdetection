@@ -242,7 +242,7 @@ class PolypDataset(CustomDataset):
     #     sample['gt_bbox'] = gt_targets
     #     return sample
 
-    def load_annotations(self):
+    def load_annotations(self, ann_file):
         # ann_list = mmcv.list_from_file(ann_file)
 
         data_infos = []
