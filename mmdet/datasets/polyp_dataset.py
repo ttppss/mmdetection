@@ -24,31 +24,6 @@ POLYP_ONLY = True
 @DATASETS.register_module()
 class PolypDataset(CustomDataset):
 
-    def __init__(self, ann_file,
-                 pipeline,
-                 classes,
-                 data_root,
-                 img_prefix,
-                 seg_prefix,
-                 proposal_file,
-                 test_mode,
-                 filter_empty_gt,
-                 split,
-                 ):
-        super(PolypDataset, self).__init__(ann_file,
-                                           pipeline,
-                                           classes,
-                                           data_root,
-                                           img_prefix,
-                                           seg_prefix,
-                                           proposal_file,
-                                           test_mode,
-                                           filter_empty_gt)
-
-
-
-        self.split = split
-
     CLASSES = ('polyp', 'instrument')
 
     def get_image_bbox(self, index):
