@@ -218,7 +218,7 @@ class PolypDataset(CustomDataset):
 
         data_infos = []
         for i, file_name in enumerate(self.image_paths):
-            print('\n', '*' * 80, '\n', 'file_name in image_path: ', file_name)
+            # print('\n', '*' * 80, '\n', 'file_name in image_path: ', file_name)
             gt_image, gt_bboxs, augmented_mask = self.get_image_bbox(i)
             img_shape = gt_image.shape
             width = int(img_shape[0])
