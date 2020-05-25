@@ -23,122 +23,33 @@ POLYP_ONLY = True
 
 @DATASETS.register_module()
 class PolypDataset(CustomDataset):
-    CLASSES = ('polyp', 'instrument')
 
     def __init__(self, ann_file,
                  pipeline,
-                 classes=None,
-                 data_root=None,
-                 img_prefix='',
-                 seg_prefix=None,
-                 proposal_file=None,
-                 test_mode=False,
-                 filter_empty_gt=True,
-                 split='train',
+                 classes,
+                 data_root,
+                 img_prefix,
+                 seg_prefix,
+                 proposal_file,
+                 test_mode,
+                 filter_empty_gt,
+                 split,
                  ):
         super(PolypDataset, self).__init__(ann_file,
                                            pipeline,
-                                           classes=None,
-                                           data_root=None,
-                                           img_prefix='',
-                                           seg_prefix=None,
-                                           proposal_file=None,
-                                           test_mode=False,
-                                           filter_empty_gt=True)
+                                           classes,
+                                           data_root,
+                                           img_prefix,
+                                           seg_prefix,
+                                           proposal_file,
+                                           test_mode,
+                                           filter_empty_gt)
 
-        self.ann_file = ann_file
-        self.data_root = data_root
-        self.img_prefix = img_prefix
-        self.seg_prefix = seg_prefix
-        self.proposal_file = proposal_file
-        self.test_mode = test_mode
-        self.filter_empty_gt = filter_empty_gt
-        self.CLASSES = self.get_classes(classes)
 
-        base_dir = self.data_root
-        anno_files = glob.glob(os.path.join(base_dir, "annos/{}".format(split), '*.json'))
-        assert len(anno_files) > 0, 'No annotation files locat at: {}'.format(
-            os.path.join(base_dir, "annos/{}".format(split)))
 
-        # minimum mask size
-        self.mask_min_size = 0
-        self.img_dir = os.path.join(base_dir, "images/")
         self.split = split
 
-        self.image_paths = []
-        self.mask_paths = []
-        public_dataset = [
-            'cvc300',
-            'CVC-ClinicDB',
-            'ETIS',
-            'Segmentation'
-        ]
-        for anno_path in anno_files:
-            with open(anno_path, 'r') as f:
-                annotation = json.load(f)
-
-            im_path = annotation['images']
-            if len(im_path) > 0:
-                im_file = im_path[0]['file_name']
-                base_name = os.path.dirname(im_file)
-            else:
-                base_name = os.path.basename(anno_path)
-            file_name_without_extention = base_name.split('.')[0]
-            if 'polyp' in file_name_without_extention:
-                _fsplit = [file_name_without_extention]
-            elif '_p' in file_name_without_extention:
-                _fsplit = file_name_without_extention.split('_p')
-            else:
-                _fsplit = file_name_without_extention.split('_P')
-
-            base_name_without_p_index = _fsplit[0]
-            folder_num = '' if len(_fsplit) == 1 else _fsplit[1]
-            im_dir = os.path.join(base_dir, 'images', base_name_without_p_index, folder_num)
-
-            assert os.path.isdir(im_dir), im_dir
-            for dirName, subdirList, fileList in os.walk(im_dir):
-                # assert len(fileList) > 0
-                for file in fileList:
-                    self.image_paths.append(os.path.join(dirName, file))
-
-                    file_name, ext = file.split('.')
-                    if ext == 'tif':
-                        mask_file = file_name + '.tif'
-                    elif ext == 'tiff':
-                        if 'ColonDB' in dirName:
-                            file_name = 'p' + file_name
-                        mask_file = file_name + '.tiff'
-                    elif ext == 'bmp':
-                        mask_file = file_name + '.bmp'
-                        if 'Segmentation' in dirName:
-                            mask_file = file_name + '_mask.tif'
-                    else:
-                        if 'cvc' in dirName:
-                            mask_file = file_name + '.png'
-                        elif 'blur' in dirName:
-                            mask_file = file_name + '.jpg'
-                        elif 'image_without_polyp' in dirName:
-                            mask_file = file_name + '.jpg'
-                        else:
-                            mask_file = file_name + '_mask.png'
-
-                    def check_if_public(dname):
-                        for i in public_dataset:
-                            if i in dname:
-                                return True
-                        return False
-
-                    if check_if_public(dirName):
-                        mask_dirName = os.path.dirname(os.path.normpath(dirName))
-                    else:
-                        mask_dirName = dirName
-                    mask_dir = os.path.relpath(mask_dirName, base_dir).replace('images', 'mask')
-                    mask_path = os.path.join(base_dir, mask_dir, mask_file)
-                    assert os.path.isfile(mask_path), mask_path
-                    self.mask_paths.append(mask_path)
-
-        assert len(self.image_paths) == len(self.mask_paths)
-        print('{} set contains {} images'.format(split, self.__len__()))
+    CLASSES = ('polyp', 'instrument')
 
     def get_image_bbox(self, index):
         _img, _target = self._make_img_gt_point_pair(index)
@@ -244,6 +155,91 @@ class PolypDataset(CustomDataset):
 
     def load_annotations(self, ann_file):
         # ann_list = mmcv.list_from_file(ann_file)
+
+        base_dir = ann_file
+        anno_files = glob.glob(os.path.join(base_dir, "annos/train", '*.json'))
+        assert len(anno_files) > 0, 'No annotation files locat at: {}'.format(
+            os.path.join(base_dir, "annos/train"))
+
+        # minimum mask size
+        self.mask_min_size = 0
+        self.img_dir = os.path.join(base_dir, "images/")
+        self.split = 'train'
+
+        self.image_paths = []
+        self.mask_paths = []
+        public_dataset = [
+            'cvc300',
+            'CVC-ClinicDB',
+            'ETIS',
+            'Segmentation'
+        ]
+        for anno_path in anno_files:
+            with open(anno_path, 'r') as f:
+                annotation = json.load(f)
+
+            im_path = annotation['images']
+            if len(im_path) > 0:
+                im_file = im_path[0]['file_name']
+                base_name = os.path.dirname(im_file)
+            else:
+                base_name = os.path.basename(anno_path)
+            file_name_without_extention = base_name.split('.')[0]
+            if 'polyp' in file_name_without_extention:
+                _fsplit = [file_name_without_extention]
+            elif '_p' in file_name_without_extention:
+                _fsplit = file_name_without_extention.split('_p')
+            else:
+                _fsplit = file_name_without_extention.split('_P')
+
+            base_name_without_p_index = _fsplit[0]
+            folder_num = '' if len(_fsplit) == 1 else _fsplit[1]
+            im_dir = os.path.join(base_dir, 'images', base_name_without_p_index, folder_num)
+
+            assert os.path.isdir(im_dir), im_dir
+            for dirName, subdirList, fileList in os.walk(im_dir):
+                # assert len(fileList) > 0
+                for file in fileList:
+                    self.image_paths.append(os.path.join(dirName, file))
+
+                    file_name, ext = file.split('.')
+                    if ext == 'tif':
+                        mask_file = file_name + '.tif'
+                    elif ext == 'tiff':
+                        if 'ColonDB' in dirName:
+                            file_name = 'p' + file_name
+                        mask_file = file_name + '.tiff'
+                    elif ext == 'bmp':
+                        mask_file = file_name + '.bmp'
+                        if 'Segmentation' in dirName:
+                            mask_file = file_name + '_mask.tif'
+                    else:
+                        if 'cvc' in dirName:
+                            mask_file = file_name + '.png'
+                        elif 'blur' in dirName:
+                            mask_file = file_name + '.jpg'
+                        elif 'image_without_polyp' in dirName:
+                            mask_file = file_name + '.jpg'
+                        else:
+                            mask_file = file_name + '_mask.png'
+
+                    def check_if_public(dname):
+                        for i in public_dataset:
+                            if i in dname:
+                                return True
+                        return False
+
+                    if check_if_public(dirName):
+                        mask_dirName = os.path.dirname(os.path.normpath(dirName))
+                    else:
+                        mask_dirName = dirName
+                    mask_dir = os.path.relpath(mask_dirName, base_dir).replace('images', 'mask')
+                    mask_path = os.path.join(base_dir, mask_dir, mask_file)
+                    assert os.path.isfile(mask_path), mask_path
+                    self.mask_paths.append(mask_path)
+
+        assert len(self.image_paths) == len(self.mask_paths)
+        print('train set contains {} images'.format(len(self.image_paths)))
 
         data_infos = []
         for i, file_name in enumerate(self.image_paths):
