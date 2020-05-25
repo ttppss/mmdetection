@@ -216,7 +216,7 @@ class PolypDataset(CustomDataset):
         assert len(self.image_paths) == len(self.mask_paths)
         print('{} set contains {} images'.format(self.split, self.__len__()))
 
-        data_infos = []
+        self.data_infos = []
         for i, file_name in enumerate(self.image_paths):
             print('file_name in image_path: ', file_name)
             gt_image, gt_bboxs, augmented_mask = self.get_image_bbox(i)
@@ -230,7 +230,7 @@ class PolypDataset(CustomDataset):
                 bboxes.append(gt_bboxs[j][:4])
                 labels.append(gt_bboxs[j][4])
 
-            data_infos.append(
+            self.data_infos.append(
                 dict(
                     filename=file_name,
                     width=width,
@@ -239,11 +239,11 @@ class PolypDataset(CustomDataset):
                         bboxes=np.array(bboxes).astype(np.float32),
                         labels=np.array(labels).astype(np.int64))
                 ))
-            print('data_info appended: ', data_infos)
+            print('data_info appended: ', self.data_infos)
 
-        print('data_infos in total: ', data_infos)
+        print('data_infos in total: ', self.data_infos)
 
-        return data_infos
+        return self.data_infos
 
     def get_ann_info(self, idx):
         return self.data_infos[idx]['ann']
