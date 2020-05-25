@@ -132,17 +132,17 @@ class PolypDataset(CustomDataset):
         # ann_list = mmcv.list_from_file(ann_file)
 
         base_dir = ann_file
-        anno_files = glob.glob(os.path.join(base_dir, "annos/train", '*.json'))
+        anno_files = glob.glob(os.path.join(base_dir, "annos/{}".format(split), '*.json'))
         assert len(anno_files) > 0, 'No annotation files locat at: {}'.format(
-            os.path.join(base_dir, "annos/train"))
+            os.path.join(base_dir, "annos/{}".format(split)))
 
         # minimum mask size
-        mask_min_size = 0
-        img_dir = os.path.join(base_dir, "images/")
-        split = 'train'
+        self.mask_min_size = 0
+        self.img_dir = os.path.join(base_dir, "images/")
+        self.split = 'train'
 
-        image_paths = []
-        mask_paths = []
+        self.image_paths = []
+        self.mask_paths = []
         public_dataset = [
             'cvc300',
             'CVC-ClinicDB',
@@ -175,7 +175,7 @@ class PolypDataset(CustomDataset):
             for dirName, subdirList, fileList in os.walk(im_dir):
                 # assert len(fileList) > 0
                 for file in fileList:
-                    image_paths.append(os.path.join(dirName, file))
+                    self.image_paths.append(os.path.join(dirName, file))
 
                     file_name, ext = file.split('.')
                     if ext == 'tif':
@@ -211,13 +211,13 @@ class PolypDataset(CustomDataset):
                     mask_dir = os.path.relpath(mask_dirName, base_dir).replace('images', 'mask')
                     mask_path = os.path.join(base_dir, mask_dir, mask_file)
                     assert os.path.isfile(mask_path), mask_path
-                    mask_paths.append(mask_path)
+                    self.mask_paths.append(mask_path)
 
-        assert len(image_paths) == len(mask_paths)
-        print('train set contains {} images'.format(len(image_paths)))
+        assert len(self.image_paths) == len(self.mask_paths)
+        print('{} set contains {} images'.format(self.split, self.__len__()))
 
         data_infos = []
-        for i, file_name in enumerate(image_paths):
+        for i, file_name in enumerate(self.image_paths):
             print('file_name in image_path: ', file_name)
             gt_image, gt_bboxs, augmented_mask = self.get_image_bbox(i)
             img_shape = gt_image.shape
