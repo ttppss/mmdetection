@@ -218,7 +218,7 @@ class PolypDataset(CustomDataset):
 
         data_infos = []
         for i, file_name in enumerate(self.image_paths):
-            print('file_name in image_path: ', file_name)
+            print('\n', '*' * 80, '\n', 'file_name in image_path: ', file_name)
             gt_image, gt_bboxs, augmented_mask = self.get_image_bbox(i)
             img_shape = gt_image.shape
             width = int(img_shape[0])
@@ -239,9 +239,9 @@ class PolypDataset(CustomDataset):
                         bboxes=np.array(bboxes).astype(np.float32),
                         labels=np.array(labels).astype(np.int64))
                 ))
-            print('data_info appended: ', data_infos)
+            # print('data_info appended: ', data_infos)
 
-        print('data_infos in total: ', data_infos)
+        print('\n', '*' * 80, '\n', 'data_infos in total: ', data_infos)
 
         return data_infos
 
