@@ -211,13 +211,13 @@ class PolypDataset(CustomDataset):
 
         return _image, _target
 
-    def __getitem__(self, index):
-        sample = {}
-        gt_image, gt_bboxs, augmented_mask = self.get_image_bbox(index)
-        gt_targets = torch.FloatTensor(gt_bboxs)
-        sample['gt_image'] = torch.from_numpy(gt_image)
-        sample['gt_bbox'] = gt_targets
-        return sample
+    # def __getitem__(self, index):
+    #     sample = {}
+    #     gt_image, gt_bboxs, augmented_mask = self.get_image_bbox(index)
+    #     gt_targets = torch.FloatTensor(gt_bboxs)
+    #     sample['gt_image'] = torch.from_numpy(gt_image)
+    #     sample['gt_bbox'] = gt_targets
+    #     return sample
 
     def load_annotations(self, ann_file):
         # ann_list = mmcv.list_from_file(ann_file)

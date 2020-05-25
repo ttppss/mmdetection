@@ -1,6 +1,8 @@
-dataset_type = 'CocoDataset'
+# dataset_type = 'CocoDataset'
+dataset_type = 'PolypDataset'
 #symlink data_root to /data1/zinan_xiong/datasets/dataset
-data_root = 'data/polyp_mmdetection_0507/'
+# data_root = 'data/polyp_mmdetection_0507/'
+data_root = '/data2/dechunwang/dataset/new_polyp_data_combination'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -33,9 +35,9 @@ data = dict(
     workers_per_gpu=2,
     train=dict(
         type=dataset_type,
-        ann_file=data_root + 'annotation/train_anno.json',
+        ann_file=data_root,
         # training data path is /data1/zinan_xiong/datasets/dataset/large_dataset
-        img_prefix=data_root + 'large_dataset/',
+        # img_prefix=data_root + 'large_dataset/',
         pipeline=train_pipeline),
     # TODO: no validation set for this one yet, need to deal with it later.
     # val=dict(
@@ -45,8 +47,8 @@ data = dict(
     #     pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'annotation/test_anno.json',
+        ann_file=data_root,
         # img_prefix is different, fixed.
-        img_prefix=data_root,
+        # img_prefix=data_root,
         pipeline=test_pipeline))
 evaluation = dict(interval=1, metric='bbox')
