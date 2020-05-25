@@ -132,9 +132,9 @@ class PolypDataset(CustomDataset):
         # ann_list = mmcv.list_from_file(ann_file)
 
         base_dir = ann_file
-        anno_files = glob.glob(os.path.join(base_dir, "annos/{}".format(split), '*.json'))
+        anno_files = glob.glob(os.path.join(base_dir, "annos/{}".format('train'), '*.json'))
         assert len(anno_files) > 0, 'No annotation files locat at: {}'.format(
-            os.path.join(base_dir, "annos/{}".format(split)))
+            os.path.join(base_dir, "annos/{}".format('train')))
 
         # minimum mask size
         self.mask_min_size = 0
