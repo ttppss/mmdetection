@@ -137,12 +137,12 @@ class PolypDataset(CustomDataset):
             os.path.join(base_dir, "annos/train"))
 
         # minimum mask size
-        self.mask_min_size = 0
-        self.img_dir = os.path.join(base_dir, "images/")
-        self.split = 'train'
+        mask_min_size = 0
+        img_dir = os.path.join(base_dir, "images/")
+        split = 'train'
 
-        self.image_paths = []
-        self.mask_paths = []
+        image_paths = []
+        mask_paths = []
         public_dataset = [
             'cvc300',
             'CVC-ClinicDB',
@@ -175,7 +175,7 @@ class PolypDataset(CustomDataset):
             for dirName, subdirList, fileList in os.walk(im_dir):
                 # assert len(fileList) > 0
                 for file in fileList:
-                    self.image_paths.append(os.path.join(dirName, file))
+                    image_paths.append(os.path.join(dirName, file))
 
                     file_name, ext = file.split('.')
                     if ext == 'tif':
@@ -211,20 +211,19 @@ class PolypDataset(CustomDataset):
                     mask_dir = os.path.relpath(mask_dirName, base_dir).replace('images', 'mask')
                     mask_path = os.path.join(base_dir, mask_dir, mask_file)
                     assert os.path.isfile(mask_path), mask_path
-                    self.mask_paths.append(mask_path)
+                    mask_paths.append(mask_path)
 
-        assert len(self.image_paths) == len(self.mask_paths)
-        print('train set contains {} images'.format(len(self.image_paths)))
+        assert len(image_paths) == len(mask_paths)
+        print('train set contains {} images'.format(len(image_paths)))
 
         data_infos = []
-        for i, file_name in enumerate(self.image_paths):
+        for i, file_name in enumerate(image_paths):
+            print('file_name in image_path: ', file_name)
             gt_image, gt_bboxs, augmented_mask = self.get_image_bbox(i)
             img_shape = gt_image.shape
             width = int(img_shape[0])
             height = int(img_shape[1])
-            # bbox_number = int(ann_list[i + 3])
 
-            # anns = ann_line.split(' ')
             bboxes = []
             labels = []
             for j in range(len(gt_bboxs)):
@@ -240,6 +239,9 @@ class PolypDataset(CustomDataset):
                         bboxes=np.array(bboxes).astype(np.float32),
                         labels=np.array(labels).astype(np.int64))
                 ))
+            print('data_info appended: ', data_infos)
+
+        print('data_infos in total: ', data_infos)
 
         return data_infos
 
