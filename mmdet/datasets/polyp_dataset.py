@@ -40,13 +40,13 @@ class PolypDataset(CustomDataset):
                  ):
         super(PolypDataset, self).__init__(ann_file,
                  pipeline,
-                 classes,
-                 data_root,
-                 img_prefix,
-                 seg_prefix,
-                 proposal_file,
-                 test_mode,
-                 filter_empty_gt)
+                 classes=None,
+                 data_root=None,
+                 img_prefix='',
+                 seg_prefix=None,
+                 proposal_file=None,
+                 test_mode=False,
+                 filter_empty_gt=True)
         base_dir = self.data_root
         anno_files = glob.glob(os.path.join(base_dir, "annos/{}".format(split), '*.json'))
         assert len(anno_files) > 0, 'No annotation files locat at: {}'.format(
