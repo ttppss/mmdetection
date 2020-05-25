@@ -17,28 +17,15 @@ from scipy.ndimage import map_coordinates
 
 from setup import *
 
-
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 POLYP_ONLY = True
 
 
 @DATASETS.register_module()
 class PolypDataset(CustomDataset):
-
     CLASSES = ('polyp', 'instrument')
 
     def __init__(self, ann_file,
-                 pipeline,
-                 classes,
-                 data_root,
-                 img_prefix,
-                 seg_prefix,
-                 proposal_file,
-                 test_mode,
-                 filter_empty_gt,
-                 split='train',
-                 ):
-        super(PolypDataset, self).__init__(ann_file,
                  pipeline,
                  classes=None,
                  data_root=None,
@@ -46,7 +33,18 @@ class PolypDataset(CustomDataset):
                  seg_prefix=None,
                  proposal_file=None,
                  test_mode=False,
-                 filter_empty_gt=True)
+                 filter_empty_gt=True,
+                 split='train',
+                 ):
+        super(PolypDataset, self).__init__(ann_file,
+                                           pipeline,
+                                           classes=None,
+                                           data_root=None,
+                                           img_prefix='',
+                                           seg_prefix=None,
+                                           proposal_file=None,
+                                           test_mode=False,
+                                           filter_empty_gt=True)
 
         self.ann_file = ann_file
         self.data_root = data_root
