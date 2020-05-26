@@ -149,11 +149,11 @@ class Resize(object):
             # if results[key] is None:
             #     continue
             # else:
-            for bbox in results[key]:
-                bboxes = bbox * results['scale_factor']
-                bboxes[:, 0::2] = np.clip(bboxes[:, 0::2], 0, img_shape[1])
-                bboxes[:, 1::2] = np.clip(bboxes[:, 1::2], 0, img_shape[0])
-                results[key] = bboxes
+            # for bbox in results[key]:
+            bboxes = results[key] * results['scale_factor']
+            bboxes[:, 0::2] = np.clip(bboxes[:, 0::2], 0, img_shape[1])
+            bboxes[:, 1::2] = np.clip(bboxes[:, 1::2], 0, img_shape[0])
+            results[key] = bboxes
 
     def _resize_masks(self, results):
         for key in results.get('mask_fields', []):
