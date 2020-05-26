@@ -144,6 +144,7 @@ class Resize(object):
         img_shape = results['img_shape']
         for key in results.get('bbox_fields', []):
             # added 'if else' here to avoid the no key error.
+            print('result key: ', results[key])
             if results[key] is None:
                 continue
             else:

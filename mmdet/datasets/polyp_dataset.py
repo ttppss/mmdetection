@@ -215,7 +215,7 @@ class PolypDataset(CustomDataset):
 
         assert len(self.image_paths) == len(self.mask_paths)
         print('{} set contains {} images'.format('train', len(self.image_paths)))
-        print('\n', '*' * 80, '\n', 'image path: ', self.image_paths)
+        # print('\n', '*' * 80, '\n', 'image path: ', self.image_paths)
 
         data_infos = []
         for i, file_name in enumerate(self.image_paths):
