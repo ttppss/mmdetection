@@ -152,7 +152,7 @@ class Resize(object):
             # for bbox in results[key]:
             # print('\n', 'results [key]: ', results[key])
             print('\n', 'scale factor: ', results['scale_factor'])
-            if results[key] is None:
+            if len(results[key]) == 0:
                 print('\n', 'results [key]: ', results[key])
                 continue
             bboxes = results[key] * results['scale_factor']
