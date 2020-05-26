@@ -145,15 +145,10 @@ class Resize(object):
         # print('results: ', results)
         for key in results.get('bbox_fields', []):
             # # added 'if else' here to avoid the no key error.
-            # # print('result key: ', results[key])
-            # if results[key] is None:
-            #     continue
-            # else:
-            # for bbox in results[key]:
             # print('\n', 'results [key]: ', results[key])
-            print('\n', 'scale factor: ', results['scale_factor'])
+            # print('\n', 'scale factor: ', results['scale_factor'])
             if len(results[key]) == 0:
-                print('\n', 'results [key]: ', results[key])
+                # print('\n', 'results [key]: ', results[key])
                 continue
             bboxes = results[key] * results['scale_factor']
             bboxes[:, 0::2] = np.clip(bboxes[:, 0::2], 0, img_shape[1])

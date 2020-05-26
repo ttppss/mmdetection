@@ -242,7 +242,7 @@ class PolypDataset(CustomDataset):
                 ))
             # print('data_info appended: ', data_infos)
 
-        print('\n', '*' * 80, '\n', 'data_infos in total: ', data_infos)
+        # print('\n', '*' * 80, '\n', 'data_infos in total: ', data_infos)
 
         return data_infos
 
