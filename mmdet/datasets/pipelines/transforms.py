@@ -150,6 +150,8 @@ class Resize(object):
             #     continue
             # else:
             # for bbox in results[key]:
+            print('\n', 'results [key]: ', results[key])
+            print('\n', 'scale factor: ', results['scale_factor'])
             bboxes = results[key] * results['scale_factor']
             bboxes[:, 0::2] = np.clip(bboxes[:, 0::2], 0, img_shape[1])
             bboxes[:, 1::2] = np.clip(bboxes[:, 1::2], 0, img_shape[0])
