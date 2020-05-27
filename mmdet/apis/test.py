@@ -89,8 +89,10 @@ def multi_gpu_test(model, data_loader, tmpdir=None, gpu_collect=False):
     for i, data in enumerate(data_loader):
         with torch.no_grad():
             result = model(return_loss=False, rescale=True, **data)
+            print('\n', '*' * 80, '\n', 'current result shape: ', len(result), '\n', 'final result in multi_gpu_test: ',
+                  result)
         results.append(result)
-        print('\n', '*' * 80, '\n', 'final result shape: ', len(results), '\n', 'final result in multi_gpu_test: ', results)
+        # print('\n', '*' * 80, '\n', 'final result shape: ', len(results), '\n', 'final result in multi_gpu_test: ', results)
 
         if rank == 0:
             batch_size = (
