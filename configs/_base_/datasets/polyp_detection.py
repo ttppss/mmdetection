@@ -1,5 +1,6 @@
 # dataset_type = 'CocoDataset'
 dataset_type = 'PolypDataset'
+dataset_type_test = 'PolypDatasetTest'
 #symlink data_root to /data1/zinan_xiong/datasets/dataset
 # data_root = 'data/polyp_mmdetection_0507/'
 data_root = '/data2/dechunwang/dataset/new_polyp_data_combination'
@@ -46,7 +47,7 @@ data = dict(
     #     img_prefix=data_root + 'val2017/',
     #     pipeline=test_pipeline),
     test=dict(
-        type=dataset_type,
+        type=dataset_type_test,
         ann_file=data_root,
         # img_prefix is different, fixed.
         # img_prefix=data_root,
