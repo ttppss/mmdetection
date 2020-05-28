@@ -17,6 +17,7 @@ from mmdet.apis import multi_gpu_test, single_gpu_test
 from mmdet.core import wrap_fp16_model
 from mmdet.datasets import build_dataloader, build_dataset
 from mmdet.models import build_detector
+from mmdet.datasets.polyp_dataset_test import PolypDatasetTest
 
 
 # customized evaluation for polyp detection
@@ -47,7 +48,11 @@ def polyp_evaluate(results):
     with torch.no_grad():
         results = results
         for thresh in np.linspace(0.2, 0.95, 7):
-            gt_lists, image_ids, _ = get_gt_lists('/data1/zinan_xiong/datasets/dataset/annotation/test_anno.json')
+            data_infos = PolypDatasetTest.load_annotations('/data2/dechunwang/dataset/new_polyp_data_combination')
+            gt_lists = list()
+            for data_info in data_infos:
+                gt_lists.append(data_info['ann']['bboxes'])
+            # gt_lists, image_ids, _ = get_gt_lists('/data1/zinan_xiong/datasets/dataset/annotation/test_anno.json')
             new_results = list()
             new_scores = list()
             # print('\n', 'results: ', results)
