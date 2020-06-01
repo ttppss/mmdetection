@@ -229,6 +229,7 @@ class PolypDataset(CustomDataset):
             labels = []
             for j in range(len(gt_bboxs)):
                 bboxes.append(gt_bboxs[j][:4])
+                # the original data in anno is 1 and 2 for label
                 labels.append(gt_bboxs[j][4])
 
             data_infos.append(
