@@ -24,7 +24,7 @@ POLYP_ONLY = True
 @DATASETS.register_module()
 class PolypDataset(CustomDataset):
 
-    # CLASSES = ('polyp', 'instrument')
+    CLASSES = ('polyp', 'instrument')
 
     def get_image_bbox(self, index):
         _img, _target = self._make_img_gt_point_pair(index)
