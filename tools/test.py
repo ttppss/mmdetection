@@ -50,7 +50,7 @@ def polyp_evaluate(results):
         args = parse_args()
         cfg = Config.fromfile(args.config)
         for thresh in np.linspace(0.2, 0.95, 7):
-            polytest = PolypDatasetTest(cfg.data.test.pipeline, '/data2/dechunwang/dataset/new_polyp_data_combination')
+            polytest = PolypDatasetTest(pipeline=cfg.data.test.pipeline, ann_file='/data2/dechunwang/dataset/new_polyp_data_combination')
             data_infos = polytest.load_annotations()
             gt_lists = list()
             for data_info in data_infos:
