@@ -57,13 +57,14 @@ class Metric(object):
             hasTP = False
             gt = gt_box
             TP_Count = 0
-            # print("gt_box 0: ", gt[0], "\n")
+            # print('*' * 70, "gt_box: ", gt, "\n")
+            # print('pred points: ', pred_points, '\n')
 
             not_matched = []
             for j in pred_points:
                 # j = [j[0], j[1], j[2], j[3]]
                 self.pred_bbox_count += 1
-                # print("pred_boxes type: {}".format([type(i) for i in j], "\n"))
+                # print("pred_boxes", "\n"))
                 # print("j0, j1, j2, j3", j[0], j[1], j[2], j[3])
                 if self.mode == 'center':
                     ctx = j[0] + (j[2] - j[0]) * 0.5
