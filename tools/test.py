@@ -47,9 +47,11 @@ def get_gt_lists(json_file, category=1):
 def polyp_evaluate(results):
     with torch.no_grad():
         results = results
+        args = parse_args()
+        cfg = Config.fromfile(args.config)
         for thresh in np.linspace(0.2, 0.95, 7):
             # polytest = PolypDatasetTest()
-            data_infos = PolypDatasetTest.load_annotations('/data2/dechunwang/dataset/new_polyp_data_combination')
+            data_infos = PolypDatasetTest.load_annotations(cfg.data.test.pipeline, '/data2/dechunwang/dataset/new_polyp_data_combination')
             gt_lists = list()
             for data_info in data_infos:
                 gt_lists.append(data_info['ann']['bboxes'])
