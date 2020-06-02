@@ -52,7 +52,7 @@ class PolypDatasetTest(CustomDataset):
                 max_x = np.max(contour[:, 0])
                 max_y = np.max(contour[:, 1])
                 area = (max_x - min_x) * (max_y - min_y)
-                if area < 0:
+                if area < self.mask_min_size:
                     continue
                 bbox = [min_x, min_y, max_x, max_y, i]
                 bboxs.append(bbox)
@@ -70,7 +70,7 @@ class PolypDatasetTest(CustomDataset):
             labeled_mask = measure.label(binary_mask)
             regions = measure.regionprops(labeled_mask)
             for prop in regions:
-                if prop.area < 0:
+                if prop.area < self.mask_min_size:
                     continue
                 min_x = prop.bbox[1]
                 min_y = prop.bbox[0]
@@ -137,12 +137,12 @@ class PolypDatasetTest(CustomDataset):
             os.path.join(base_dir, "annos/{}".format('test')))
 
         # minimum mask size
-        # mask_min_size = 0
-        img_dir = os.path.join(base_dir, "images/")
-        split = 'test'
+        self.mask_min_size = 0
+        self.img_dir = os.path.join(base_dir, "images/")
+        self.split = 'test'
 
-        image_paths = []
-        mask_paths = []
+        self.image_paths = []
+        self.mask_paths = []
         public_dataset = [
             'cvc300',
             'CVC-ClinicDB',
@@ -175,7 +175,7 @@ class PolypDatasetTest(CustomDataset):
             for dirName, subdirList, fileList in os.walk(im_dir):
                 # assert len(fileList) > 0
                 for file in fileList:
-                    image_paths.append(os.path.join(dirName, file))
+                    self.image_paths.append(os.path.join(dirName, file))
 
                     file_name, ext = file.split('.')
                     if ext == 'tif':
@@ -211,14 +211,14 @@ class PolypDatasetTest(CustomDataset):
                     mask_dir = os.path.relpath(mask_dirName, base_dir).replace('images', 'mask')
                     mask_path = os.path.join(base_dir, mask_dir, mask_file)
                     assert os.path.isfile(mask_path), mask_path
-                    mask_paths.append(mask_path)
+                    self.mask_paths.append(mask_path)
 
-        assert len(image_paths) == len(mask_paths)
-        print('{} set contains {} images'.format('test', len(image_paths)))
+        assert len(self.image_paths) == len(self.mask_paths)
+        print('{} set contains {} images'.format('test', len(self.image_paths)))
         # print('\n', '*' * 80, '\n', 'image path: ', self.image_paths)
 
         data_infos = []
-        for i, file_name in enumerate(image_paths):
+        for i, file_name in enumerate(self.image_paths):
             # print('\n', '*' * 80, '\n', 'file_name in image_path: ', file_name)
             gt_image, gt_bboxs, augmented_mask = self.get_image_bbox(i)
             img_shape = gt_image.shape
