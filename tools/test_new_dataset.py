@@ -21,7 +21,7 @@ from mmdet.datasets.polyp_dataset_test import PolypDatasetTest
 
 import pickle
 
-results = pickle.load(open('/data1/zinan_xiong/mmdetection/r50_new_dataset_3_classes.pkl', 'rb'))
+results = pickle.load(open('/data1/zinan_xiong/mmdetection/r101_new_dataset_3_classes.pkl', 'rb'))
 
 # customized evaluation for polyp detection
 def bbox2box(bbox):
@@ -225,7 +225,7 @@ def main():
     #         dataset.format_results(outputs, **kwargs)
     #     if args.eval:
     #         # dataset.evaluate(outputs, args.eval, **kwargs)
-    outputs = pickle.load(open('/data1/zinan_xiong/mmdetection/r50_new_dataset_3_classes.pkl', 'rb'))
+    outputs = pickle.load(open('/data1/zinan_xiong/mmdetection/r101_new_dataset_3_classes.pkl', 'rb'))
     polyp_evaluate(outputs)
 
 
