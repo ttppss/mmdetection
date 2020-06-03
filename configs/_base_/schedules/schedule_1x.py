@@ -1,5 +1,5 @@
 # optimizer
-optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=None)
 # learning policy
 lr_config = dict(
@@ -9,4 +9,4 @@ lr_config = dict(
     warmup_ratio=0.001,
     step=[8, 11])
 # change the epoch from 12 to 6
-total_epochs = 12
+total_epochs = 20
