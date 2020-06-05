@@ -22,7 +22,66 @@ from mmdet.datasets.polyp_dataset_test import PolypDatasetTest
 import pickle
 import imageio
 
-results = pickle.load(open('/data1/zinan_xiong/mmdetection/r101_new_dataset_9_epoch_3_classes.pkl', 'rb'))
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description='MMDet test (and eval) a model')
+    parser.add_argument('config', help='test config file path')
+    parser.add_argument('checkpoint', help='checkpoint file')
+    parser.add_argument('--out', help='output result file in pickle format')
+    parser.add_argument(
+        '--fuse-conv-bn',
+        action='store_true',
+        help='Whether to fuse conv and bn, this will slightly increase'
+             'the inference speed')
+    parser.add_argument(
+        '--format-only',
+        action='store_true',
+        help='Format the output results without perform evaluation. It is'
+             'useful when you want to format the result to a specific format and '
+             'submit it to the test server')
+    parser.add_argument(
+        '--eval',
+        type=str,
+        nargs='+',
+        help='evaluation metrics, which depends on the dataset, e.g., "bbox",'
+             ' "segm", "proposal" for COCO, and "mAP", "recall" for PASCAL VOC')
+    parser.add_argument('--show', action='store_true', help='show results')
+    parser.add_argument(
+        '--show-dir', help='directory where painted images will be saved')
+    parser.add_argument(
+        '--show-score-thr',
+        type=float,
+        default=0.3,
+        help='score threshold (default: 0.3)')
+    parser.add_argument(
+        '--gpu-collect',
+        action='store_true',
+        help='whether to use gpu to collect results.')
+    parser.add_argument(
+        '--tmpdir',
+        help='tmp directory used for collecting results from multiple '
+             'workers, available when gpu-collect is not specified')
+    parser.add_argument(
+        '--options', nargs='+', action=DictAction, help='arguments in dict')
+    parser.add_argument(
+        '--launcher',
+        choices=['none', 'pytorch', 'slurm', 'mpi'],
+        default='none',
+        help='job launcher')
+    parser.add_argument('--local_rank', type=int, default=0)
+    parser.add_argument('--visualization', default=False)
+    parser.add_argument('--visualization_root')
+    parser.add_argument('--pickle_file')
+    args = parser.parse_args()
+    if 'LOCAL_RANK' not in os.environ:
+        os.environ['LOCAL_RANK'] = str(args.local_rank)
+    return args
+
+
+args = parse_args()
+results = pickle.load(open(args.pickle_file, 'rb'))
+
 
 # customized evaluation for polyp detection
 def bbox2box(bbox):
@@ -54,8 +113,8 @@ def polyp_evaluate(results):
         args = parse_args()
         cfg = Config.fromfile(args.config)
         polytest = PolypDatasetTest(pipeline=cfg.data.test.pipeline,
-                                    ann_file='/data2/dechunwang/dataset/new_polyp_data_combination')
-        data_infos = polytest.load_annotations(ann_file='/data2/dechunwang/dataset/new_polyp_data_combination')
+                                    ann_file=cfg.data.test.ann_file)
+        data_infos = polytest.load_annotations(ann_file=cfg.data.test.ann_file)
         gt_lists = list()
         image_list = list()
         for data_info in data_infos:
@@ -82,7 +141,8 @@ def polyp_evaluate(results):
                 new_results.append(new_result)
                 new_scores.append(new_score)
 
-            eval = Metric(visualize=True, mode='center', visualization_root='/data1/zinan_xiong/mmdetection/visual_dir/' + str(thresh))
+            eval = Metric(visualize=args.visualization, mode='center',
+                          visualization_root=args.visualization_root + str(thresh))
 
             for i in range(len(gt_lists)):
                 image = image_list[i]
@@ -97,61 +157,9 @@ def polyp_evaluate(results):
                                                                                                                 F1, F2,
                                                                                                                 pred_bbox_count))
 
-def parse_args():
-    parser = argparse.ArgumentParser(
-        description='MMDet test (and eval) a model')
-    parser.add_argument('config', help='test config file path')
-    parser.add_argument('checkpoint', help='checkpoint file')
-    parser.add_argument('--out', help='output result file in pickle format')
-    parser.add_argument(
-        '--fuse-conv-bn',
-        action='store_true',
-        help='Whether to fuse conv and bn, this will slightly increase'
-        'the inference speed')
-    parser.add_argument(
-        '--format-only',
-        action='store_true',
-        help='Format the output results without perform evaluation. It is'
-        'useful when you want to format the result to a specific format and '
-        'submit it to the test server')
-    parser.add_argument(
-        '--eval',
-        type=str,
-        nargs='+',
-        help='evaluation metrics, which depends on the dataset, e.g., "bbox",'
-        ' "segm", "proposal" for COCO, and "mAP", "recall" for PASCAL VOC')
-    parser.add_argument('--show', action='store_true', help='show results')
-    parser.add_argument(
-        '--show-dir', help='directory where painted images will be saved')
-    parser.add_argument(
-        '--show-score-thr',
-        type=float,
-        default=0.3,
-        help='score threshold (default: 0.3)')
-    parser.add_argument(
-        '--gpu-collect',
-        action='store_true',
-        help='whether to use gpu to collect results.')
-    parser.add_argument(
-        '--tmpdir',
-        help='tmp directory used for collecting results from multiple '
-        'workers, available when gpu-collect is not specified')
-    parser.add_argument(
-        '--options', nargs='+', action=DictAction, help='arguments in dict')
-    parser.add_argument(
-        '--launcher',
-        choices=['none', 'pytorch', 'slurm', 'mpi'],
-        default='none',
-        help='job launcher')
-    parser.add_argument('--local_rank', type=int, default=0)
-    args = parser.parse_args()
-    if 'LOCAL_RANK' not in os.environ:
-        os.environ['LOCAL_RANK'] = str(args.local_rank)
-    return args
-
 
 def main():
-    # args = parse_args()
+    args = parse_args()
     #
     # assert args.out or args.eval or args.format_only or args.show \
     #     or args.show_dir, \
@@ -230,7 +238,7 @@ def main():
     #         dataset.format_results(outputs, **kwargs)
     #     if args.eval:
     #         # dataset.evaluate(outputs, args.eval, **kwargs)
-    outputs = pickle.load(open('/data1/zinan_xiong/mmdetection/r101_new_dataset_9_epoch_3_classes.pkl', 'rb'))
+    outputs = pickle.load(open(args.pickle_file, 'rb'))
     polyp_evaluate(outputs)
 
 
