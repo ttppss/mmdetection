@@ -78,7 +78,7 @@ def polyp_evaluate(results):
                 new_results.append(new_result)
                 new_scores.append(new_score)
 
-            eval = Metric(visualize=False, mode='center')
+            eval = Metric(visualize=True, mode='center')
 
             for i in range(len(gt_lists)):
                 eval.eval_add_result(gt_lists[i], new_results[i])
