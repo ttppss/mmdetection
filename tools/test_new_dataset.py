@@ -20,6 +20,7 @@ from mmdet.models import build_detector
 from mmdet.datasets.polyp_dataset_test import PolypDatasetTest
 
 import pickle
+import imageio
 
 results = pickle.load(open('/data1/zinan_xiong/mmdetection/r101_new_dataset_3_classes.pkl', 'rb'))
 
@@ -55,12 +56,15 @@ def polyp_evaluate(results):
         polytest = PolypDatasetTest(pipeline=cfg.data.test.pipeline,
                                     ann_file='/data2/dechunwang/dataset/new_polyp_data_combination')
         data_infos = polytest.load_annotations(ann_file='/data2/dechunwang/dataset/new_polyp_data_combination')
+        gt_lists = list()
+        image_list = list()
+        for data_info in data_infos:
+            gt_lists.append(data_info['ann']['bboxes'])
+            image_list.append(imageio.imread(data_info['filename']))
         for thresh in np.linspace(0.10, 0.95, 18):
             # polytest = PolypDatasetTest(pipeline=cfg.data.test.pipeline, ann_file='/data2/dechunwang/dataset/new_polyp_data_combination')
             # data_infos = polytest.load_annotations(ann_file='/data2/dechunwang/dataset/new_polyp_data_combination')
-            gt_lists = list()
-            for data_info in data_infos:
-                gt_lists.append(data_info['ann']['bboxes'])
+
             # gt_lists, image_ids, _ = get_gt_lists('/data1/zinan_xiong/datasets/dataset/annotation/test_anno.json')
             new_results = list()
             new_scores = list()
@@ -81,7 +85,8 @@ def polyp_evaluate(results):
             eval = Metric(visualize=True, mode='center', visualization_root='/data1/zinan_xiong/mmdetection/visual_dir/' + str(thresh))
 
             for i in range(len(gt_lists)):
-                eval.eval_add_result(gt_lists[i], new_results[i])
+                image = image_list[i]
+                eval.eval_add_result(gt_lists[i], new_results[i], image=image, image_name=i)
             precision, recall, pred_bbox_count = eval.get_result()
             F1 = 2 * (precision * recall) / max((precision + recall), 1e-5)
             F2 = 5 * (precision * recall) / max((4 * precision + recall), 1e-5)
