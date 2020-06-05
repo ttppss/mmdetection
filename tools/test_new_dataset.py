@@ -141,8 +141,11 @@ def polyp_evaluate(results):
                 new_results.append(new_result)
                 new_scores.append(new_score)
 
-            eval = Metric(visualize=args.visualization, mode='center',
-                          visualization_root=args.visualization_root + str(thresh))
+            if args.visualization:
+                eval = Metric(visualize=args.visualization, mode='center',
+                              visualization_root=args.visualization_root + str(thresh))
+            else:
+                eval = Metric(visualize=args.visualization, mode='center')
 
             for i in range(len(gt_lists)):
                 image = image_list[i]
