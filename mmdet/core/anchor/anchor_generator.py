@@ -10,7 +10,7 @@ class AnchorGenerator(object):
     """Standard anchor generator for 2D anchor-based detectors
 
     Args:
-        strides (list[int]): Strides of anchors in multiple feture levels.
+        strides (list[int]): Strides of anchors in multiple feature levels.
         ratios (list[float]): The list of ratios between the height and width
             of anchors in a single level.
         scales (list[int] | None): Anchor scales for anchors in a single level.
