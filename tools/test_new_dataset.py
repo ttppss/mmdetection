@@ -117,7 +117,9 @@ def polyp_evaluate(results):
         data_infos = polytest.load_annotations(ann_file=cfg.data.test.ann_file)
         gt_lists = list()
         image_list = list()
+        img_name_list = list()
         for data_info in data_infos:
+            img_name_list.append(data_info['filename'])
             gt_lists.append(data_info['ann']['bboxes'])
             image_list.append(imageio.imread(data_info['filename']))
         for thresh in np.linspace(0.05, 0.95, 20):
@@ -149,7 +151,7 @@ def polyp_evaluate(results):
 
             for i in range(len(gt_lists)):
                 image = image_list[i]
-                eval.eval_add_result(gt_lists[i], new_results[i], image=image, image_name=i)
+                eval.eval_add_result(gt_lists[i], new_results[i], image=image, image_name=img_name_list[i])
             precision, recall, pred_bbox_count = eval.get_result()
             F1 = 2 * (precision * recall) / max((precision + recall), 1e-5)
             F2 = 5 * (precision * recall) / max((4 * precision + recall), 1e-5)
