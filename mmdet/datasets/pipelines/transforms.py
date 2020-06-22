@@ -15,7 +15,8 @@ except ImportError:
 
 try:
     import albumentations
-    from albumentations import Compose, BboxParams
+    from albumentations import Compose
+    from albumentations import BboxParams
 except ImportError:
     albumentations = None
     Compose = None
