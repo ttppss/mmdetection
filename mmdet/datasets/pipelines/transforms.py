@@ -15,7 +15,7 @@ except ImportError:
 
 try:
     import albumentations
-    from albumentations import Compose
+    from albumentations import Compose, BboxParams
 except ImportError:
     albumentations = None
     Compose = None
@@ -771,12 +771,12 @@ class Albu(object):
         args = cfg.copy()
 
         obj_type = args.pop('type')
-        if mmcv.is_str(obj_type):
-            if albumentations is None:
-                raise RuntimeError('albumentations is not installed')
-            print('albuobject type: ', albumentations, obj_type)
-            obj_cls = getattr(albumentations, obj_type)
-        elif inspect.isclass(obj_type):
+        # if mmcv.is_str(obj_type):
+        #     if albumentations is None:
+        #         raise RuntimeError('albumentations is not installed')
+        #     print('albuobject type: ', albumentations, obj_type)
+        #     obj_cls = getattr(albumentations, obj_type)
+        if inspect.isclass(obj_type):
             obj_cls = obj_type
         else:
             raise TypeError(
