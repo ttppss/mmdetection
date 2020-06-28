@@ -197,7 +197,8 @@ def main():
 
     for checkpt in check_list:
         checkpt_name = checkpt.split('.')[0]
-        checkpoint = load_checkpoint(model, checkpt, map_location='cpu')
+        checkpt_full_path = os.path.join(checkpoint_folder, checkpt)
+        checkpoint = load_checkpoint(model, checkpt_full_path, map_location='cpu')
         if args.fuse_conv_bn:
             model = fuse_module(model)
         # old versions did not save class info in checkpoints, this walkaround is
