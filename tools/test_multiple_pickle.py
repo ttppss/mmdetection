@@ -225,7 +225,8 @@ def main():
         if rank == 0:
             if args.checkpoint_folder:
                 print(f'\nwriting results to {checkpt}')
-                mmcv.dump(outputs, os.path.join(pickle_dir, checkpt_name, '.pkl'))
+                pickle_name = pickle_dir + '/' + checkpt_name + '.pkl'
+                mmcv.dump(outputs, pickle_name)
             kwargs = {} if args.options is None else args.options
             if args.format_only:
                 dataset.format_results(outputs, **kwargs)
