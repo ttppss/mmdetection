@@ -192,7 +192,7 @@ def main():
     check_list = os.listdir(checkpoint_folder)
     pickle_dir = 'pickle_dir/' + checkpoint_folder
     if os.path.exists(pickle_dir) == False:
-        os.mkdirs(pickle_dir)
+        os.makedirs(pickle_dir)
 
     for checkpt in check_list:
         checkpt_name = checkpt.split('.')[0]
