@@ -190,6 +190,7 @@ def main():
         wrap_fp16_model(model)
     checkpoint_folder = args.checkpoint_folder
     check_list = os.listdir(checkpoint_folder)
+    check_list = [i for i in check_list if i.split('.')[1] == 'pth']
     pickle_dir = 'pickle_dir/' + checkpoint_folder
     if os.path.exists(pickle_dir) == False:
         os.makedirs(pickle_dir)
