@@ -143,11 +143,11 @@ def parse_args():
 def main():
     args = parse_args()
 
-    assert args.out or args.eval or args.format_only or args.show \
-        or args.show_dir, \
-        ('Please specify at least one operation (save/eval/format/show the '
-         'results / save the results) with the argument "--out", "--eval"'
-         ', "--format-only", "--show" or "--show-dir"')
+    # assert args.out or args.eval or args.format_only or args.show \
+    #     or args.show_dir, \
+    #     ('Please specify at least one operation (save/eval/format/show the '
+    #      'results / save the results) with the argument "--out", "--eval"'
+    #      ', "--format-only", "--show" or "--show-dir"')
 
     if args.eval and args.format_only:
         raise ValueError('--eval and --format_only cannot be both specified')
@@ -190,6 +190,9 @@ def main():
         wrap_fp16_model(model)
     checkpoint_folder = args.checkpoint_folder
     check_list = os.listdir(checkpoint_folder)
+    pickle_dir = 'pickle_dir/' + checkpoint_folder
+    if os.path.exists(pickle_dir) == False:
+        os.mkdir(pickle_dir)
 
     for checkpt in check_list:
         checkpt_name = checkpt.split('.')[0]
@@ -220,7 +223,7 @@ def main():
         if rank == 0:
             if args.checkpoint_folder:
                 print(f'\nwriting results to {checkpt}')
-                mmcv.dump(outputs, checkpt_name + '.pkl')
+                mmcv.dump(outputs, os.path.join(pickle_dir, checkpt_name, '.pkl'))
             kwargs = {} if args.options is None else args.options
             if args.format_only:
                 dataset.format_results(outputs, **kwargs)
