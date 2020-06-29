@@ -9,7 +9,7 @@ from matplotlib import colors
 
 # import json
 class Metric(object):
-    def __init__(self, mode='center', iou_thresh=0, visualize=False, visualization_root='/data1/zinan_xiong/'):
+    def __init__(self, mode='center', iou_thresh=0, visualize=True, visualization_root='/data1/zinan_xiong/'):
 
         self.TPs = []
         self.FNs = []
