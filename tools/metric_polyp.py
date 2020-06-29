@@ -28,7 +28,7 @@ class Metric(object):
         self.GT_color = (0, 0, 255)
         self.visualize = visualize
         self.total_gt = 0.0
-        if visualize:
+        if self.visualize:
             #  create image folder for saving detection result
             self.detection_folder = visualization_root + 'ALL/'
             self.false_positive_folder = visualization_root + 'FP/'
