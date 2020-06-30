@@ -165,6 +165,84 @@ def polyp_evaluate(results):
 
 def main():
     args = parse_args()
+    #
+    # assert args.out or args.eval or args.format_only or args.show \
+    #     or args.show_dir, \
+    #     ('Please specify at least one operation (save/eval/format/show the '
+    #      'results / save the results) with the argument "--out", "--eval"'
+    #      ', "--format-only", "--show" or "--show-dir"')
+    #
+    # if args.eval and args.format_only:
+    #     raise ValueError('--eval and --format_only cannot be both specified')
+    #
+    # if args.out is not None and not args.out.endswith(('.pkl', '.pickle')):
+    #     raise ValueError('The output file must be a pkl file.')
+    #
+    # cfg = Config.fromfile(args.config)
+    # # set cudnn_benchmark
+    # if cfg.get('cudnn_benchmark', False):
+    #     torch.backends.cudnn.benchmark = True
+    # cfg.model.pretrained = None
+    # cfg.data.test.test_mode = True
+    #
+    # # init distributed env first, since logger depends on the dist info.
+    # if args.launcher == 'none':
+    #     distributed = False
+    # else:
+    #     distributed = True
+    #     init_dist(args.launcher, **cfg.dist_params)
+    #
+    # # build the dataloader
+    # # TODO: support multiple images per gpu (only minor changes are needed)
+    # dataset = build_dataset(cfg.data.test)
+    # data_loader = build_dataloader(
+    #     dataset,
+    #     samples_per_gpu=1,
+    #     workers_per_gpu=cfg.data.workers_per_gpu,
+    #     dist=distributed,
+    #     shuffle=False)
+    #
+    # # test data_loader
+    # # for i, item in enumerate(data_loader):
+    # #     print(item)
+    #
+    # # build the model and load checkpoint
+    # model = build_detector(cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
+    # fp16_cfg = cfg.get('fp16', None)
+    # if fp16_cfg is not None:
+    #     wrap_fp16_model(model)
+    # checkpoint = load_checkpoint(model, args.checkpoint, map_location='cpu')
+    # if args.fuse_conv_bn:
+    #     model = fuse_module(model)
+    # # old versions did not save class info in checkpoints, this walkaround is
+    # # for backward compatibility
+    # if 'CLASSES' in checkpoint['meta']:
+    #     model.CLASSES = checkpoint['meta']['CLASSES']
+    # else:
+    #     model.CLASSES = dataset.CLASSES
+    #
+    # if not distributed:
+    #     model = MMDataParallel(model, device_ids=[0])
+    #     outputs = single_gpu_test(model, data_loader, args.show, args.show_dir,
+    #                               args.show_score_thr)
+    # else:
+    #     model = MMDistributedDataParallel(
+    #         model.cuda(),
+    #         device_ids=[torch.cuda.current_device()],
+    #         broadcast_buffers=False)
+    #     outputs = multi_gpu_test(model, data_loader, args.tmpdir,
+    #                              args.gpu_collect)
+    #
+    # rank, _ = get_dist_info()
+    # if rank == 0:
+    #     if args.out:
+    #         print(f'\nwriting results to {args.out}')
+    #         mmcv.dump(outputs, args.out)
+    #     kwargs = {} if args.options is None else args.options
+    #     if args.format_only:
+    #         dataset.format_results(outputs, **kwargs)
+    #     if args.eval:
+    #         # dataset.evaluate(outputs, args.eval, **kwargs)
     outputs = pickle.load(open(args.pickle_file, 'rb'))
     polyp_evaluate(outputs)
 
