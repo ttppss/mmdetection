@@ -124,8 +124,8 @@ class Metric(object):
             if missing:
                 print('*' * 80, '\n', 'missing img: ', image_name)
                 print('\n', 'image path: ', self.false_negative_folder + str(image_name))
-                cv2.imwrite(self.false_negative_folder + str(image_name) + '.jpg', cv2.cvtColor(FNimage, cv2.COLOR_RGB2BGR))
-            cv2.imwrite(self.detection_folder + str(image_name) + '.jpg', cv2.cvtColor(Detectionimage, cv2.COLOR_RGB2BGR))
+                cv2.imwrite(self.false_negative_folder + str(image_name), cv2.cvtColor(FNimage, cv2.COLOR_RGB2BGR))
+            cv2.imwrite(self.detection_folder + str(image_name), cv2.cvtColor(Detectionimage, cv2.COLOR_RGB2BGR))
             print('*' * 80, '\n', 'detected img: ', image_name)
         if len(pred_points) > 0 and self.visualize:
             # Draw false positive rect
@@ -133,7 +133,7 @@ class Metric(object):
                 pt1 = tuple([int(fp[0]), int(fp[1])])
                 pt2 = tuple([int(fp[2]), int(fp[3])])
                 cv2.rectangle(FPimage, pt1, pt2, self.FP_color, 2)
-            cv2.imwrite(self.false_positive_folder + str(image_name) + '.jpg', cv2.cvtColor(FPimage, cv2.COLOR_RGB2BGR))
+            cv2.imwrite(self.false_positive_folder + str(image_name), cv2.cvtColor(FPimage, cv2.COLOR_RGB2BGR))
             print('*' * 80, '\n', 'false positive img: ', image_name)
         #  add FP here
         self.FPs += pred_points

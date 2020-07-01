@@ -151,7 +151,7 @@ def polyp_evaluate(results):
 
             for i in range(len(gt_lists)):
                 image = image_list[i]
-                image_name = '_'.join(img_name_list[i].split('/')[-3:].replace('/', '_'))
+                image_name = '_'.join(img_name_list[i].split('/')[-3:])
                 eval.eval_add_result(gt_lists[i], new_results[i], image=image, image_name=image_name)
             precision, recall, pred_bbox_count = eval.get_result()
             F1 = 2 * (precision * recall) / max((precision + recall), 1e-5)
