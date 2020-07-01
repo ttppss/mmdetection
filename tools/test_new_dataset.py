@@ -145,7 +145,7 @@ def polyp_evaluate(results):
 
             if args.visualization:
                 eval = Metric(visualize=args.visualization, mode='center',
-                              visualization_root=args.visualization_root + '/' + args.pickle_file + '/' + str(thresh) + '/')
+                              visualization_root=args.visualization_root + args.pickle_file + '/' + str(thresh) + '/')
             else:
                 eval = Metric(visualize=args.visualization, mode='center')
 
